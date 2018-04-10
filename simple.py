@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import sys
+import sys, time
 from PyQt5.QtWidgets import (QWidget, QPushButton, QApplication)
 from PyQt5.QtCore import pyqtSlot
 
@@ -18,6 +18,8 @@ class Window(QWidget):
         self.width = 640
         self.height = 480
         self.initUI()
+        begin = 0
+        end = 0
 
     def initUI(self):
         """TODO: Docstring for initUI.
@@ -30,13 +32,24 @@ class Window(QWidget):
         button = QPushButton('Push', self)
         button.setToolTip('Push to create dots or dashs')
         button.move(100,70)
-        button.clicked.connect(self.onClick)
+        button.pressed.connect(self.onPress)
+        button.released.connect(self.onRelease)
 
         self.show()
 
     @pyqtSlot()
-    def onClick(self):
-        print('woof woof')
+    def onPress(self):
+        self.begin = time.time()
+
+    @pyqtSlot()
+    def onRelease(self):
+        self.end = time.time()
+        print(self.end- self.begin) 
+        if (self.end - self.begin) < 0.15:
+            print("woof")
+
+        else:
+            print("dog")
 
 
 if __name__ == "__main__":
