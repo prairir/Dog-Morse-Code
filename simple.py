@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import sys, time
+import sys, time, pyaudio, wave
 from PyQt5.QtWidgets import (QWidget, QPushButton, QApplication)
 from PyQt5.QtCore import pyqtSlot
 
@@ -44,7 +44,6 @@ class Window(QWidget):
     @pyqtSlot()
     def onRelease(self):
         self.end = time.time()
-        print(self.end- self.begin) 
         if (self.end - self.begin) < 0.15:
             print("woof")
 
@@ -53,6 +52,7 @@ class Window(QWidget):
 
 
 if __name__ == "__main__":
+    chunk = 1024
     app = QApplication(sys.argv)
     win = Window()
     sys.exit(app.exec_())
