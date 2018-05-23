@@ -4,7 +4,7 @@ import sys, time, pyaudio, wave
 from PyQt5.QtWidgets import (QWidget, QPushButton, QApplication)
 from PyQt5.QtCore import pyqtSlot
 
-""""""
+
 class Window(QWidget):
 
     """Docstring for Window. """
@@ -43,17 +43,42 @@ class Window(QWidget):
 
     @pyqtSlot()
     def onRelease(self):
+        chunk=1024
         self.end = time.time()
+        dog= wave.open("audio/dog.wav", 'rb')
+        doggo= wave.open("audio/doggo.wav", 'rb')
+        audio = pyaudio.PyAudio()
+
+        streamd= audio.open(format=audio.get_format_from_width(dog.getsampwidth()),channels=dog.getnchannels(),rate=dog.getframerate(),output=True)
+        streamdg= audio.open(format=audio.get_format_from_width(doggo.getsampwidth()),channels=doggo.getnchannels(),rate=doggo.getframerate(),output=True)
+        datad=dog.readframes(chunk)
+        datadg= doggo.readframes(chunk)
+        
         if (self.end - self.begin) < 0.15:
             print("woof")
+            while len(datad) > 0:
+                streamd.write(datad)
+                datad = dog.readframes(chunk)
+
+            streamd.stop_stream()
 
         else:
             print("dog")
 
+            while len(datadg) > 0:
+                streamdg.write(datadg)
+                datadg = doggo.readframes(chunk)
+
+            streamdg.stop_stream()
+
+        
+        streamd.close()
+        streamdg.close()
+        audio.terminate()
 
 if __name__ == "__main__":
-    chunk = 1024
     app = QApplication(sys.argv)
+
     win = Window()
     sys.exit(app.exec_())
 
